@@ -1,53 +1,4 @@
-/**********************************************************************
-  ga_bitstring.c
- **********************************************************************
-
-  ga_bitstring - GAUL's low-level bitstring routines.
-  Copyright ©2001-2003, Stewart Adcock <stewart@linux-domain.com>
-  All rights reserved.
-
-  The latest version of this program should be available at:
-  http://gaul.sourceforge.net/
-
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.  Alternatively, if your project
-  is incompatible with the GPL, I will probably agree to requests
-  for permission to use the terms of any other license.
-
-  This program is distributed in the hope that it will be useful, but
-  WITHOUT ANY WARRANTY WHATSOEVER.
-
-  A full copy of the GNU General Public License should be in the file
-  "COPYING" provided with this distribution; if not, see:
-  http://www.gnu.org/
-
- **********************************************************************
-
-  Synopsis:     Low-level bitstring handling functions.
-
-		Note that there is a lack of sanity checking in here
-		for efficiency reasons.  Parameter safety should be
-		confirmed in the wrapper functions.
-
-  To do:	Mappings.
-
-  FIXME:	Performance of gray encoding/decoding is dreadful now
-  		that it uses malloc/free.  There is also a bug in these
-		routines.
-
- **********************************************************************/
-
 #include "ga_bitstring.h"
-
-/**********************************************************************
-  ga_bit_new()
-  synopsis:	Create a new bitstring.
-  parameters:	int	length	Number of bits.
-  return:	byte	*ptr	Newly allocated bitstring.
-  last updated:	30/06/01
- **********************************************************************/
 
 byte *ga_bit_new( int length )
   {
@@ -59,31 +10,12 @@ byte *ga_bit_new( int length )
   return ptr;
   }
 
-
-/**********************************************************************
-  ga_bit_free()
-  synopsis:	Deallocates a bitstring.
-  parameters:	byte	*bstr	Bitstring to deallocate.
-  return:	none
-  last updated:	30/06/01
- **********************************************************************/
-
 void ga_bit_free( byte *bstr )
   {
   s_free( bstr );
 
   return;
   }
-
-
-/**********************************************************************
-  ga_bit_set()
-  synopsis:	Sets a single bit in a bitstring.
-  parameters:	byte	*bstr	Bitstring.
-		int	n	Bit index.
-  return:	none
-  last updated:	30/06/01
- **********************************************************************/
 
 void ga_bit_set( byte *bstr, int n )
   {
@@ -92,32 +24,12 @@ void ga_bit_set( byte *bstr, int n )
   return;
   }
 
-
-/**********************************************************************
-  ga_bit_clear()
-  synopsis:	Unsets a single bit in a bitstring.
-  parameters:	byte	*bstr	Bitstring.
-		int	n	Bit index.
-  return:	none
-  last updated:	07 Sep 2003
- **********************************************************************/
-
 void ga_bit_clear( byte *bstr, int n )
   {
   bstr[n/BYTEBITS] &= ~(1 << ( n%BYTEBITS ));
 
   return;
   }
-
-
-/**********************************************************************
-  ga_bit_invert()
-  synopsis:	Toggles a single bit in a bitstring.
-  parameters:	byte	*bstr	Bitstring.
-		int	n	Bit index.
-  return:	none
-  last updated:	07 Sep 2003
- **********************************************************************/
 
 void ga_bit_invert( byte *bstr, int n )
   {
@@ -127,29 +39,12 @@ void ga_bit_invert( byte *bstr, int n )
   }
 
 
-/**********************************************************************
-  ga_bit_get()
-  synopsis:	Returns the state of a single bit in a bitstring.
-  parameters:	byte	*bstr	Bitstring.
-		int	n	Bit index.
-  return:	boolean	val	The bit's state.
-  last updated:	30/06/01
- **********************************************************************/
+
 
 boolean ga_bit_get( byte *bstr, int n )
   {
   return (boolean) ( (bstr[n/BYTEBITS] & (1 << (n % BYTEBITS))) != 0 );
   }
-
-
-/**********************************************************************
-  ga_bit_randomize()
-  synopsis:	Randomly sets the state of a single bit in a bitstring.
-  parameters:	byte	*bstr	Bitstring.
-		int	n	Bit index.
-  return:	none
-  last updated:	30/06/01
- **********************************************************************/
 
 void ga_bit_randomize( byte *bstr, int n )
   {
@@ -160,23 +55,6 @@ void ga_bit_randomize( byte *bstr, int n )
 
   return;
   }
-
-
-/**********************************************************************
-  ga_bit_copy()
-  synopsis:	Copies a set of bits in a bitstring.
-		If dest and src are the same, overlapping sequences
-		of bits are safely handled.
- 
-		FIXME: Should use memcpy, when appropriate.
-  parameters:	byte	*dest	Destination bitstring.
-		byte	*src	Source bitstring
-		int	ndest	Initial bit index of destination bits.
-		int	nsrc	Initial bit index of source bits.
-		int	length	Number of bits to copy.
-  return:	none
-  last updated:	29 Jun 2003
- **********************************************************************/
 
 void ga_bit_copy( byte *dest, byte *src, int ndest, int nsrc, int length )
   {
@@ -206,32 +84,11 @@ void ga_bit_copy( byte *dest, byte *src, int ndest, int nsrc, int length )
   return;
   }
 
-
-/**********************************************************************
-  ga_bit_sizeof()
-  synopsis:	Return the size required for the given number of
-		bits, rounded up if needed.
-  parameters:	int	length	Number of bits.
-  return:	none
-  last updated:	30/06/01
- **********************************************************************/
-
 size_t ga_bit_sizeof( int length )
   {
 /* Note that sizeof(byte) should always be 1. */
   return sizeof(byte) * (length+BYTEBITS-1) / BYTEBITS;
   }
-
-
-/**********************************************************************
-  ga_bit_clone()
-  synopsis:	Copies a complete bitstring.
-  parameters:	byte	*dest	Destination bitstring.
-		byte	*src	Source bitstring
-		int	length	Number of bits in bitstrings.
-  return:	none
-  last updated:	30/06/01
- **********************************************************************/
 
 byte *ga_bit_clone( byte *dest, byte *src, int length )
   {
@@ -242,15 +99,6 @@ byte *ga_bit_clone( byte *dest, byte *src, int length )
   return dest;
   }
 
-
-/**********************************************************************
-  ga_bit_decode_binary_uint()
-  synopsis:	Convert a binary-encoded bitstring into an unsigned int
-		starting at a given offset. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
 
 unsigned int ga_bit_decode_binary_uint( byte *bstr, int n, int length )
   {
@@ -265,16 +113,6 @@ unsigned int ga_bit_decode_binary_uint( byte *bstr, int n, int length )
 
   return value;
   }
-
-
-/**********************************************************************
-  ga_bit_encode_binary_uint()
-  synopsis:	Convert an unsigned int into a binary-encoded bitstring
-		starting at a given offset. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
 
 void ga_bit_encode_binary_uint( byte *bstr, int n, int length, unsigned int value )
   {
@@ -294,16 +132,6 @@ void ga_bit_encode_binary_uint( byte *bstr, int n, int length, unsigned int valu
   return;
   }
 
-
-/**********************************************************************
-  ga_bit_decode_binary_int()
-  synopsis:	Convert a binary-encoded bitstring into a signed int
-		starting at a given offset. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
-
 int ga_bit_decode_binary_int( byte *bstr, int n, int length )
   {
   if ( ga_bit_get( bstr, n ) )
@@ -311,16 +139,6 @@ int ga_bit_decode_binary_int( byte *bstr, int n, int length )
   else
     return (int) ga_bit_decode_binary_uint( bstr, n+1, length-1 );
   }
-
-
-/**********************************************************************
-  ga_bit_encode_binary_int()
-  synopsis:	Convert a signed int into a binary-encoded bitstring
-		starting at a given offset. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
 
 void ga_bit_encode_binary_int( byte *bstr, int n, int length, int value )
   {
@@ -338,16 +156,6 @@ void ga_bit_encode_binary_int( byte *bstr, int n, int length, int value )
 
   return;
   }
-
-
-/**********************************************************************
-  gray_to_binary()
-  synopsis:	Convert a Gray-encoded bitstring into a binary-encoded
-		bitstring.
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
 
 static void gray_to_binary( byte *gray_bstr, int n, byte *int_bstr, int length )
   {
@@ -375,16 +183,6 @@ static void gray_to_binary( byte *gray_bstr, int n, byte *int_bstr, int length )
 
   return;
   }
-
-
-/**********************************************************************
-  binary_to_gray()
-  synopsis:	Convert a binary-encoded bitstring into a gray-encoded
-		bitstring.
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
 
 static void binary_to_gray( byte *gray_bstr, int n, byte *int_bstr, int length )
   {
@@ -422,15 +220,6 @@ static void binary_to_gray( byte *gray_bstr, int n, byte *int_bstr, int length )
   }
 
 
-/**********************************************************************
-  ga_bit_decode_gray_int()
-  synopsis:	Convert a gray-encoded bitstring into a signed int
-		starting at a given offset. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
-
 int ga_bit_decode_gray_int( byte *bstr, int n, int length )
   {
   byte		*int_bstr;
@@ -447,16 +236,6 @@ int ga_bit_decode_gray_int( byte *bstr, int n, int length )
 
   return val;
   }
-
-
-/**********************************************************************
-  ga_bit_decode_gray_uint()
-  synopsis:	Convert a gray-encoded bitstring into an unsigned int
-		starting at a given offset. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
 
 unsigned int ga_bit_decode_gray_uint( byte *bstr, int n, int length )
   {
@@ -475,16 +254,6 @@ unsigned int ga_bit_decode_gray_uint( byte *bstr, int n, int length )
   return val;
   }
 
-
-/**********************************************************************
-  ga_bit_encode_gray_uint()
-  synopsis:	Convert an unsigned int into a gray-encoded bitstring
-		starting at a given offset. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
-
 void ga_bit_encode_gray_uint( byte *bstr, int n, int length, unsigned int value )
   {
   byte	*int_bstr;
@@ -499,16 +268,6 @@ void ga_bit_encode_gray_uint( byte *bstr, int n, int length, unsigned int value 
 
   return;
   }
-
-
-/**********************************************************************
-  ga_bit_encode_gray_int()
-  synopsis:	Convert an unsigned int into a gray-encoded bitstring
-		starting at a given offset. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
 
 void ga_bit_encode_gray_int( byte *bstr, int n, int length, int value )
   {
@@ -525,16 +284,6 @@ void ga_bit_encode_gray_int( byte *bstr, int n, int length, int value )
   return;
   }
 
-
-/**********************************************************************
-  ga_bit_decode_binary_real()
-  synopsis:	Convert a binary-encoded bitstring at a given offset
-		into a real. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
-
 double ga_bit_decode_binary_real( byte *bstr, int n, int mantissa, int exponent )
   {
   double	value;
@@ -550,15 +299,6 @@ double ga_bit_decode_binary_real( byte *bstr, int n, int mantissa, int exponent 
   }
 
 
-/**********************************************************************
-  ga_bit_encode_binary_real()
-  synopsis:	Convert a real into a binary-encoded bitstring at a
-                given offset. 
-  parameters:
-  return:
-  last updated: 08 Jan 2003
- **********************************************************************/
-
 void ga_bit_encode_binary_real( byte *bstr, int n, int mantissa, int exponent, double value )
   {
   int int_mantissa, int_exponent;
@@ -569,16 +309,6 @@ void ga_bit_encode_binary_real( byte *bstr, int n, int mantissa, int exponent, d
 
   return;
   }
-
-
-/**********************************************************************
-  ga_bit_decode_gray_real()
-  synopsis:	Convert a Gray-encoded bitstring at a given offset
-		into a real. 
-  parameters:
-  return:
-  last updated: 25 Jul 2003
- **********************************************************************/
 
 double ga_bit_decode_gray_real( byte *bstr, int n, int mantissa, int exponent )
   {
@@ -594,16 +324,6 @@ double ga_bit_decode_gray_real( byte *bstr, int n, int mantissa, int exponent )
   return value;        
   }
 
-
-/**********************************************************************
-  ga_bit_encode_gray_real()
-  synopsis:	Convert a real into a Gray-encoded bitstring at a
-                given offset. 
-  parameters:
-  return:
-  last updated: 25 Jul 2003
- **********************************************************************/
-
 void ga_bit_encode_gray_real( byte *bstr, int n, int mantissa, int exponent, double value )
   {
   int int_mantissa, int_exponent;
@@ -615,15 +335,6 @@ void ga_bit_encode_gray_real( byte *bstr, int n, int mantissa, int exponent, dou
 
   return;
   }
-
-
-/**********************************************************************
-  ga_bit_test()
-  synopsis:	Test bitstring conversion routines.
-  parameters:	none
-  return:	Always TRUE, currently.
-  last updated: 06 Oct 2004
- **********************************************************************/
 
 boolean ga_bit_test( void )
   {

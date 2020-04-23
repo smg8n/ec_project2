@@ -471,7 +471,7 @@ void report2()
    
   cout<<"\n\n"<<"Average of Best of run Fitness :  "<<avg;  
   cout<<"\n"<<"Average of Average of Generations :  "<<avg1; 
-  cout <<"\n"<<"Average of Best of Genration : " <<avg2 << endl; 
+  cout <<"\n"<<"Average of Best of Generations : " <<avg2 << endl; 
 } 
  
 void report ( int generation , int run ) 

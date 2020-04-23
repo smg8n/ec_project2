@@ -579,10 +579,8 @@ void selector(int &seed)
     break;
   }
 }
-// http://www.geatbx.com/docu/algindex-02.html#P523_26478
 
 // proportional selector
-// Roulette Wheel Selection
 static void proportional_selector ( int &seed ) 
 { 
   //cout << "proportional_selector" << endl;
@@ -658,11 +656,7 @@ static void proportional_selector ( int &seed )
   return;      
 }
 //
-// for tournament selector take a look at
-//
-//  https://www.geeksforgeeks.org/tournament-selection-ga/
-//  https://stackoverflow.com/questions/4873205/genetic-algorithm-tournament-selection
-//
+// for tournament selector //
 static void binary_tournament_selector( int &seed )
 { 
   // cout << "binary_tournament_selector" << endl;
@@ -760,8 +754,7 @@ static void binary_tournament_selector( int &seed )
 // linear ranking
 // Rank selection first ranks the population and then every chromosome receives fitness from this ranking.
 // The worst will have fitness 1, second worst 2 etc. and the best will have fitness N (number of chromosomes in population).
-// For the algorithm, please check https://www.obitko.com/tutorials/genetic-algorithms/selection.php
-//
+
 static void linear_ranking_selector2 ( int &seed ) 
 { 
   //cout << "proportional_selector" << endl;
